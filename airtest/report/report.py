@@ -209,9 +209,24 @@ class LogToHtml(object):
                 target_pos = step["data"]["ret"][1]
                 origin_pos = step["data"]["ret"][0]
                 screen["vector"].append([target_pos[0] - origin_pos[0], target_pos[1] - origin_pos[1]])
+        
+        elif 0 == step["data"]["name"].find("ocr_"):
+            if step["data"]["call_args"].get("rect"):
+                rect = step["data"]["call_args"]["rect"]
+                tip = {'left': rect[0], 'top': rect[1], 'width': rect[2] - rect[0], 'height': rect[3] - rect[1]}
+                screen["rect"].append(tip)
+                #if step["data"].get("ret"):
+                #    display_pos = step["data"]["ret"]
+                #screen['confidence'] = 1
+                if step["data"].get("resolution"):
+                    screen['resolution'] = step["data"]['resolution']
 
         if display_pos:
             screen["pos"].append(display_pos)
+
+        if item["data"]["name"] == "_cv_match":
+            print('_cv_match:{}'.format(screen))
+            
         return screen
 
     def _translate_device(self, step):
