@@ -215,17 +215,11 @@ class LogToHtml(object):
                 rect = step["data"]["call_args"]["rect"]
                 tip = {'left': rect[0], 'top': rect[1], 'width': rect[2] - rect[0], 'height': rect[3] - rect[1]}
                 screen["rect"].append(tip)
-                #if step["data"].get("ret"):
-                #    display_pos = step["data"]["ret"]
-                #screen['confidence'] = 1
                 if step["data"].get("resolution"):
                     screen['resolution'] = step["data"]['resolution']
 
         if display_pos:
             screen["pos"].append(display_pos)
-
-        if item["data"]["name"] == "_cv_match":
-            print('_cv_match:{}'.format(screen))
             
         return screen
 
