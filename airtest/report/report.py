@@ -209,7 +209,7 @@ class LogToHtml(object):
                 target_pos = step["data"]["ret"][1]
                 origin_pos = step["data"]["ret"][0]
                 screen["vector"].append([target_pos[0] - origin_pos[0], target_pos[1] - origin_pos[1]])
-        
+
         elif 0 == step["data"]["name"].find("ocr_"):
             if step["data"]["call_args"].get("rect"):
                 rect = step["data"]["call_args"]["rect"]
@@ -217,6 +217,13 @@ class LogToHtml(object):
                 screen["rect"].append(tip)
                 if step["data"].get("resolution"):
                     screen['resolution'] = step["data"]['resolution']
+
+                if step["data"].get("ret"):
+                    rets = step["data"]["ret"]
+                    if len(rets) > 1:
+                        pos = rets[0]
+                        if self.is_pos(pos):
+                            display_pos = [round(pos[0]), round(pos[1])]
 
         if display_pos:
             screen["pos"].append(display_pos)
@@ -254,6 +261,9 @@ class LogToHtml(object):
         return "%s_small%s" % (name, ext)
 
     def _translate_info(self, step):
+        if 0 == step["data"]["name"].find("ocr_") and step["data"].get("ret"):
+            return "", step["data"]["ret"]
+        
         trace_msg, log_msg = "", ""
         if "traceback" in step["data"]:
             # 若包含有traceback内容，将会认定步骤失败
