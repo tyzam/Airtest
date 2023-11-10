@@ -210,21 +210,29 @@ class LogToHtml(object):
                 origin_pos = step["data"]["ret"][0]
                 screen["vector"].append([target_pos[0] - origin_pos[0], target_pos[1] - origin_pos[1]])
 
-        elif 0 == step["data"]["name"].find("ocr_"):
-            if step["data"]["call_args"].get("rect"):
-                rect = step["data"]["call_args"]["rect"]
-                tip = {'left': rect[0], 'top': rect[1], 'width': rect[2] - rect[0], 'height': rect[3] - rect[1]}
-                screen["rect"].append(tip)
-                if step["data"].get("resolution"):
-                    screen['resolution'] = step["data"]['resolution']
+        elif step["data"]["name"].startswith("ocr_"):
+            rect = step["data"]["call_args"].get("rect")
+            if rect:
+                tip = {
+                    'left': rect[0],
+                    'top': rect[1],
+                    'width': rect[2] - rect[0],
+                    'height': rect[3] - rect[1]
+                }
+                screen['resolution'] = step["data"].get("resolution")
 
-                if step["data"].get("ret"):
-                    rets = step["data"]["ret"]
-                    if len(rets) > 1:
-                        pos = rets[0]
-                        if self.is_pos(pos):
-                            display_pos = [round(pos[0]), round(pos[1])]
+                tmp_rect = [tip]
+                ret = step["data"].get("ret")
+                if ret:
+                    if self.is_pos(ret[0]):
+                        display_pos = [round(ret[0][0]), round(ret[0][1])]
 
+                else:
+                    tmp_rect.append('style="border-color: grey;"')
+                
+                screen["rect"].append(tmp_rect)
+
+                
         if display_pos:
             screen["pos"].append(display_pos)
             

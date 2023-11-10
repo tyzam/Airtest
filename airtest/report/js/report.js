@@ -390,7 +390,7 @@ function StepPannel(data, root){
       if (step.code) {
         for (var i = 0; i < step.code.args.length; i++) {
           arg = step.code.args[i]
-          if (arg.image) {
+                    if (arg.image) {
             argHtml += ('<img class="crop_image desc" data-width="%s" data-height="%s" src="%s" title="%s">' +
                 '<p class="desc">resolution: %s</p>')
                 .format(arg.resolution[0], arg.resolution[1], arg.image, arg.image, arg.value.resolution)
@@ -444,12 +444,11 @@ function StepPannel(data, root){
       }
       
       // 还有个rect <!-- rect area -->
-      var rectors = ''
-      for(var i=0;i<step.screen.rect.length; i++){
-        var rect = step.screen.rect[i]
-        rectors += "<div class='rect' rect='%s' ></div>"
-                   .format(JSON.stringify(rect))
-      }
+      var rectors = step.screen.rect.map(function(rect) {
+        var style = rect.length > 1 ? rect[1] : "";
+        return "<div class='rect' rect='" + JSON.stringify(rect[0]) + "' " + style + "></div>";
+      }).join("");
+
       var res = step.screen.resolution
       res = res ? 'w=%s h=%s'.format(res[0], res[1]): ""
 
