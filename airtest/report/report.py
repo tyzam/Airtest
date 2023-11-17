@@ -234,6 +234,21 @@ class LogToHtml(object):
                 
                 screen["rect"].append(tmp_rect)
 
+        elif step["data"]["name"] == "do_action":
+            print( step["data"]["call_args"]["act"])
+            if len(step["data"]["call_args"]["act"]) > 2:
+                rect = step["data"]["call_args"]["act"][1]
+                if rect and isinstance(rect,  (list, tuple)) and len(rect) > 3 and not isinstance(rect[0], (list, tuple)):
+                    print("---:{}".format(rect))
+                    tip = {
+                        'left': int(rect[0]),
+                        'top': int(rect[1]),
+                        'width': int(rect[2] - rect[0]),
+                        'height': int(rect[3] - rect[1])
+                    }
+
+                    screen['resolution'] = step["data"].get("resolution")
+                    screen["rect"].append([tip, 'style="border-color: yellow;"'])
                 
         if display_pos:
             screen["pos"].append(display_pos)
