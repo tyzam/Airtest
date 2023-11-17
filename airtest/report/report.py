@@ -223,9 +223,11 @@ class LogToHtml(object):
 
                 tmp_rect = [tip]
                 ret = step["data"].get("ret")
-                if ret:
+                if ret and isinstance(ret, list):
                     if self.is_pos(ret[0]):
                         display_pos = [round(ret[0][0]), round(ret[0][1])]
+                    elif not ret:
+                        tmp_rect.append('style="border-color: grey;"')
 
                 else:
                     tmp_rect.append('style="border-color: grey;"')
