@@ -224,6 +224,11 @@ class LogToHtml(object):
                 tmp_rect = [tip]
                 ret = step["data"].get("ret")
                 if ret and isinstance(ret, list):
+                    last = ret
+                    while self.is_pos(ret[0]):
+                        ret = last
+                        last = last[0]
+                        
                     if self.is_pos(ret[0]):
                         display_pos = [round(ret[0][0]), round(ret[0][1])]
                     elif not ret:
@@ -235,7 +240,7 @@ class LogToHtml(object):
                 screen["rect"].append(tmp_rect)
 
         elif step["data"]["name"] == "do_action":
-            print( step["data"]["call_args"]["act"])
+            #print( step["data"]["call_args"]["act"])
             if len(step["data"]["call_args"]["act"]) > 2:
                 rect = step["data"]["call_args"]["act"][1]
                 if rect and isinstance(rect,  (list, tuple)) and len(rect) > 3 and not isinstance(rect[0], (list, tuple)):
